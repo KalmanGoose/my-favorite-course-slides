@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Favorite Course — NTU GenAI & Machine Learning</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --subtle: #64748b;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --teal: #0d9488;
+      --teal-soft: #ccfbf1;
+      --amber: #d97706;
+      --amber-soft: #fef3c7;
+      --border: #e2e8f0;
+      --shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: radial-gradient(circle at top right, #1e293b, #0f172a 70%);
+    }
+
+    .slide {
+      display: none;
+      width: min(94vw, calc(90vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: clamp(28px, 4vw, 56px);
+      position: relative;
+      overflow: hidden;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeSlide 0.25s ease-out;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Decorative subtle corner shape */
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.09), transparent 70%);
+      pointer-events: none;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: clamp(12px, 1.1vw, 15px);
+      color: var(--subtle);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: clamp(12px, 1.05vw, 14px);
+      font-weight: 700;
+    }
+
+    .tag.teal {
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .tag.amber {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    h1 {
+      font-size: clamp(28px, 3.6vw, 52px);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    h2 {
+      font-size: clamp(24px, 2.8vw, 40px);
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: clamp(15px, 1.5vw, 22px);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(14px, 2vw, 26px);
+      margin: clamp(10px, 1.4vw, 20px) 0;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(16px, 2.2vw, 32px);
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(14px, 1.8vw, 24px);
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: clamp(16px, 2vw, 28px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .card.highlight {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+    }
+
+    .card.teal-card {
+      border-color: var(--teal);
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
+    }
+
+    .card-num {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .card h3 {
+      font-size: clamp(17px, 1.7vw, 24px);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .card p, .bullet-list li {
+      font-size: clamp(14px, 1.35vw, 19px);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bullet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .bullet-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+
+    .quote-banner {
+      background: var(--ink);
+      color: #f8fafc;
+      border-radius: 16px;
+      padding: clamp(16px, 2vw, 26px) clamp(20px, 2.5vw, 34px);
+      font-size: clamp(16px, 1.55vw, 22px);
+      font-weight: 600;
+      line-height: 1.45;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .quote-banner span.em {
+      color: #60a5fa;
+      font-weight: 800;
+    }
+
+    .dropzone {
+      border: 2.5px dashed #94a3b8;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: clamp(18px, 2.2vw, 30px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      min-height: 240px;
+      color: var(--subtle);
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .flow-box {
+      flex: 1;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: clamp(14px, 1.8vw, 24px);
+      text-align: center;
+    }
+
+    .flow-arrow {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .ref-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ref-list li {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: clamp(12px, 1.15vw, 15.5px);
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .ref-list strong {
+      color: var(--ink);
+    }
+
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: clamp(12px, 1vw, 14px);
+      color: var(--subtle);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    /* Controls overlay */
+    .controls {
+      position: fixed;
+      bottom: 18px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      z-index: 100;
+    }
+
+    .controls button {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #f8fafc;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .controls button:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .controls .counter {
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 0 6px;
+    }
+
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      z-index: 100;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #3b82f6;
+      transition: width 0.25s ease;
+    }
+
+    /* Mobile responsive layout for viewing on phone */
+    @media (max-width: 768px) {
+      .deck {
+        height: 100dvh;
+        padding: 14px 10px 80px;
+        align-items: flex-start;
+        overflow-y: auto;
+      }
+      .slide {
+        width: 100%;
+        aspect-ratio: auto;
+        min-height: calc(100dvh - 96px);
+        max-height: none;
+        overflow: visible;
+        border-radius: 16px;
+        padding: 20px 18px;
+        gap: 16px;
+      }
+      h1 { font-size: 26px; }
+      h2 { font-size: 22px; margin-bottom: 6px; }
+      .subtitle { font-size: 14px; }
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .flow-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .flow-box { width: 100%; }
+      .flow-arrow { transform: rotate(90deg); font-size: 20px; }
+      .card p, .bullet-list li { font-size: 15px; }
+      .quote-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 16px;
+        padding: 16px;
+        gap: 8px;
+      }
+      .dropzone { min-height: 180px; padding: 16px; }
+      .controls {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 12px;
+        width: max-content;
+      }
+      .controls button.desktop-only {
+        display: none;
+      }
+    }
+
+    /* Print to clean 16:9 PDF backup */
+    @media print {
+      @page {
+        size: 1280px 720px;
+        margin: 0;
+      }
+      html, body {
+        background: #fff;
+        overflow: visible;
+      }
+      .deck {
+        display: block;
+        height: auto;
+        background: none;
+      }
+      .slide {
+        display: flex !important;
+        width: 1280px;
+        height: 720px;
+        border-radius: 0;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .controls, .progress-track {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <main class="deck" id="deck">
+
+    <!-- SLIDE 1: COVER -->
+    <section class="slide active">
+      <div class="top-bar">
+        <span class="tag">My Favorite Course</span>
+        <span>Class Activity Presentation</span>
+      </div>
+      <div class="content">
+        <div>
+          <h1>Introduction to Generative AI<br/>&amp; Machine Learning</h1>
+          <p class="subtitle" style="margin-top: 14px;">Prof. Hung-yi Lee &nbsp;|&nbsp; National Taiwan University (Fall 2025)</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag amber" style="width: fit-content;">Before</span>
+            <h3>Just a User</h3>
+            <p>Only typing prompts into ChatGPT without knowing what happens inside.</p>
+          </div>
+          <div class="card highlight">
+            <span class="tag" style="width: fit-content;">After Learning</span>
+            <h3>Become a Creator</h3>
+            <p>Understand the basic rules and build your own AI tools.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>Have you ever used ChatGPT?</span>
+        <span>Slide 1 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: BEFORE VS NOW -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag">01 / Motivation</span>
+        <span>Why This Course?</span>
+      </div>
+      <div class="content">
+        <h2>How My Mind Changed</h2>
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag amber" style="width: fit-content;">Before This Class</span>
+            <ul class="bullet-list" style="margin-top: 8px;">
+              <li><span class="bullet-dot" style="background: var(--amber);"></span><span>AI <strong>had been</strong> like magic to me.</span></li>
+              <li><span class="bullet-dot" style="background: var(--amber);"></span><span>I <strong>had thought</strong> it was only hard math.</span></li>
+            </ul>
+          </div>
+          <div class="card teal-card">
+            <span class="tag teal" style="width: fit-content;">Since Watching His Lectures</span>
+            <ul class="bullet-list" style="margin-top: 8px;">
+              <li><span class="bullet-dot" style="background: var(--teal);"></span><span>Clear, visual, easy to follow.</span></li>
+              <li><span class="bullet-dot" style="background: var(--teal);"></span><span>I <strong>have already learned</strong> how the big picture works!</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="quote-banner">
+          <span>"If I hadn't watched his videos, I wouldn't have known how clear AI can be."</span>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>From fear of math &rarr; real understanding</span>
+        <span>Slide 2 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: 3-STEP FRAMEWORK -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag">02 / Core Idea</span>
+        <span>Machine Learning = Looking for a Function</span>
+      </div>
+      <div class="content">
+        <h2>3 Simple Steps to Train AI</h2>
+        <p class="subtitle">Simple pictures instead of dry formulas</p>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-num">1</div>
+            <h3>Loss Function</h3>
+            <p>Set a clear goal.<br/>Define what a "good" answer looks like.</p>
+          </div>
+          <div class="card">
+            <div class="card-num">2</div>
+            <h3>Pick a Model</h3>
+            <p>Choose your function range (Linear &rarr; Neural Networks).</p>
+          </div>
+          <div class="card highlight">
+            <div class="card-num">3</div>
+            <h3>Gradient Descent</h3>
+            <p>Take small steps downhill to find the lowest loss.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>Really interesting &amp; very useful framework</span>
+        <span>Slide 3 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: LOSS CURVE PLACEHOLDER -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag">03 / Watching AI Learn</span>
+        <span>Loss Curve</span>
+      </div>
+      <div class="content">
+        <h2>Reading a Loss Curve</h2>
+        <div class="grid-2">
+          <div class="dropzone" id="lossDropZone">
+            <!-- Sample clean inline SVG until user drops real curve -->
+            <svg width="260" height="140" viewBox="0 0 260 140" fill="none">
+              <line x1="28" y1="15" x2="28" y2="115" stroke="#64748b" stroke-width="2"/>
+              <line x1="28" y1="115" x2="245" y2="115" stroke="#64748b" stroke-width="2"/>
+              <path d="M 35 26 Q 75 95, 235 104" stroke="#2563eb" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <text x="8" y="25" font-size="11" fill="#475569" font-weight="700">Loss</text>
+              <text x="195" y="132" font-size="11" fill="#475569" font-weight="700">Steps</text>
+            </svg>
+            <strong style="color: var(--accent); font-size: 16px;">[ 預留區：放入你的真實 Loss 曲線圖 ]</strong>
+            <span style="font-size: 13px;">送出圖片後，會直接替換到這格</span>
+          </div>
+          <div class="card">
+            <h3>What the Curve Tells Us</h3>
+            <ul class="bullet-list" style="margin-top: 8px;">
+              <li><span class="bullet-dot" style="background: var(--teal);"></span><span><strong>Curve goes down &darr;</strong><br/>The model is learning well.</span></li>
+              <li><span class="bullet-dot" style="background: var(--amber);"></span><span><strong>Curve stops dropping &rarr;</strong><br/>Change settings and try again.</span></li>
+              <li><span class="bullet-dot"></span><span><strong>Making mistakes is normal</strong> &mdash; just do your best!</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>Learning from errors step by step</span>
+        <span>Slide 4 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: GENAI + OPEN EDUCATION -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag">04 / Modern AI &amp; Open Access</span>
+        <span>From Basics to GenAI</span>
+      </div>
+      <div class="content">
+        <h2>Connecting to Generative AI</h2>
+        <div class="flow-row">
+          <div class="flow-box">
+            <span class="tag" style="margin-bottom: 8px;">Step 1</span>
+            <h3>Pre-training</h3>
+            <p style="font-size: 15px; color: var(--muted); margin-top: 6px;">Learn language from huge data</p>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box">
+            <span class="tag" style="margin-bottom: 8px;">Step 2</span>
+            <h3>Fine-tuning</h3>
+            <p style="font-size: 15px; color: var(--muted); margin-top: 6px;">Follow human instructions (LoRA)</p>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box" style="border-color: var(--teal);">
+            <span class="tag teal" style="margin-bottom: 8px;">Step 3</span>
+            <h3>Alignment &amp; Image AI</h3>
+            <p style="font-size: 15px; color: var(--muted); margin-top: 6px;">Match preferences &amp; Diffusion</p>
+          </div>
+        </div>
+        <div class="quote-banner">
+          <span>Free on YouTube &amp; Web &mdash; Anyone who enjoys learning can <span class="em">take up AI</span>!</span>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>Open education for everyone</span>
+        <span>Slide 5 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: MY PROJECT DEMO PLACEHOLDER -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag teal">05 / Product Showcase</span>
+        <span>Hands-On Practice</span>
+      </div>
+      <div class="content">
+        <h2>My AI Project Demo</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>From Zero to a Real Product</h3>
+            <ul class="bullet-list" style="margin-top: 8px;">
+              <li><span class="bullet-dot"></span><span>I <strong>had never had</strong> a chance to train a real model before.</span></li>
+              <li><span class="bullet-dot" style="background: var(--amber);"></span><span>At first it was hard, but I didn't <strong>give up</strong>.</span></li>
+              <li><span class="bullet-dot" style="background: var(--teal);"></span><span>Keep trying &rarr; you <strong>will end up with</strong> something real!</span></li>
+            </ul>
+          </div>
+          <div class="dropzone" id="demoDropZone">
+            <div style="font-size: 40px;">&#128187;</div>
+            <strong style="color: var(--teal); font-size: 16px;">[ 預留區：放入你的作品／產品展示截圖 ]</strong>
+            <span style="font-size: 13px;">支援放 1～2 張成果圖、介面圖或數據比較圖</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>If I had more time today, I would show you even more!</span>
+        <span>Slide 6 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: CONCLUSION -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag">06 / Conclusion</span>
+        <span>Key Takeaways</span>
+      </div>
+      <div class="content">
+        <h2>Why It Is My Favorite Course</h2>
+        <div class="grid-3">
+          <div class="card">
+            <span class="tag" style="width: fit-content;">Clear Teaching</span>
+            <h3>Simple &amp; Fun</h3>
+            <p>Hard math becomes clear pictures you actually remember.</p>
+          </div>
+          <div class="card">
+            <span class="tag teal" style="width: fit-content;">Hands-On Coding</span>
+            <h3>Real Practice</h3>
+            <p>Learn by testing models, fixing mistakes, and building demos.</p>
+          </div>
+          <div class="card highlight">
+            <span class="tag amber" style="width: fit-content;">Future Plan</span>
+            <h3>Keep Building</h3>
+            <p>I am going to keep learning and look forward to creating smarter tools.</p>
+          </div>
+        </div>
+        <div class="quote-banner">
+          <span>"To sum up, this course is <span class="em">totally amazing</span>."</span>
+          <span style="font-size: 16px; color: #cbd5e1;">Thank you for listening!</span>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <span>Questions are welcome</span>
+        <span>Slide 7 / 8</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: REFERENCES -->
+    <section class="slide">
+      <div class="top-bar">
+        <span class="tag">07 / References</span>
+        <span>Self-Learning Sources</span>
+      </div>
+      <div class="content">
+        <h2>References</h2>
+        <ul class="ref-list">
+          <li><strong>1. Course Website &amp; Slides:</strong> Lee, H.-y. (2025). <em>Introduction to Generative AI and Machine Learning (Fall 2025)</em>. National Taiwan University. https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php</li>
+          <li><strong>2. Fine-Tuning (LoRA):</strong> Hu, E. J., et al. (2021). <em>LoRA: Low-Rank Adaptation of Large Language Models</em>. arXiv preprint arXiv:2106.09685.</li>
+          <li><strong>3. Alignment (DPO):</strong> Rafailov, R., et al. (2023). <em>Direct Preference Optimization: Your Language Model is Secretly a Reward Model</em>. NeurIPS 2023.</li>
+          <li><strong>4. Image Generation:</strong> Rombach, R., et al. (2022). <em>High-Resolution Image Synthesis with Latent Diffusion Models</em>. CVPR 2022.</li>
+        </ul>
+      </div>
+      <div class="footer-bar">
+        <span>Thank you!</span>
+        <span>Slide 8 / 8</span>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="controls">
+    <button onclick="prevSlide()" title="Previous Slide">&larr; Prev</button>
+    <span class="counter" id="counter">1 / 8</span>
+    <button onclick="nextSlide()" title="Next Slide">Next &rarr;</button>
+    <button class="desktop-only" onclick="toggleFullscreen()" title="Fullscreen (F)">Fullscreen</button>
+    <button class="desktop-only" onclick="window.print()" title="Export 16:9 PDF">Save PDF</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const counter = document.getElementById('counter');
+    const progressFill = document.getElementById('progressFill');
+    let current = 0;
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      progressFill.style.width = `${((current + 1) / slides.length) * 100}%`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+      }
+    });
+
+    // Touch swipe navigation for mobile phone viewing
+    let touchStartX = 0;
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      const dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
